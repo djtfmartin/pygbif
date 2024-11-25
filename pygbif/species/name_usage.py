@@ -115,10 +115,10 @@ def name_usage_fetch(x, key, shortname, uuid, args, **kwargs):
         raise TypeError("You must specify `key` if `data` does not equal `all`")
 
     if x == "all" and key is None:
-        url = gbif_baseurl + "species"
+        url = gbif_baseurl() + "species"
     else:
         if x == "all" and key is not None:
-            url = gbif_baseurl + "species/" + str(key)
+            url = gbif_baseurl() + "species/" + str(key)
         else:
             if x in [
                 "verbatim",
@@ -135,10 +135,10 @@ def name_usage_fetch(x, key, shortname, uuid, args, **kwargs):
                 "vernacularNames",
                 "typeSpecimens",
             ]:
-                url = gbif_baseurl + "species/%s/%s" % (str(key), x)
+                url = gbif_baseurl() + "species/%s/%s" % (str(key), x)
             else:
                 if x == "root":
-                    url = gbif_baseurl + "species/%s/%s" % (uuid, shortname)
+                    url = gbif_baseurl() + "species/%s/%s" % (uuid, shortname)
 
     res = gbif_GET(url, args, **kwargs)
     return res

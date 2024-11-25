@@ -351,7 +351,7 @@ def search(
         ## in via **kwargs, e.g., set a timeout
         x = occurrences.search(timeout = 1)
     """
-    url = gbif_baseurl + "occurrence/search"
+    url = gbif_baseurl() + "occurrence/search"
     args = {
         "taxonKey": taxonKey,
         "repatriated": repatriated,

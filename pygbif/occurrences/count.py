@@ -51,7 +51,7 @@ def count(
         issue=issue,
         year=year,
     )
-    url = gbif_baseurl + "occurrence/count"
+    url = gbif_baseurl() + "occurrence/count"
     isGeoreferenced = bool2str(isGeoreferenced)
     out = gbif_GET(
         url,
@@ -82,7 +82,7 @@ def count_basisofrecord(**kwargs):
             from pygbif import occurrences
             occurrences.count_basisofrecord()
     """
-    url = gbif_baseurl + "occurrence/counts/basisOfRecord"
+    url = gbif_baseurl() + "occurrence/counts/basisOfRecord"
     out = gbif_GET(url, {}, **kwargs)
     return out
 
@@ -100,7 +100,7 @@ def count_year(year, **kwargs):
             from pygbif import occurrences
             occurrences.count_year(year = '1990,2000')
     """
-    url = gbif_baseurl + "occurrence/counts/year"
+    url = gbif_baseurl() + "occurrence/counts/year"
     out = gbif_GET(url, {"year": year}, **kwargs)
     return out
 
@@ -119,7 +119,7 @@ def count_datasets(taxonKey=None, country=None, **kwargs):
             from pygbif import occurrences
             occurrences.count_datasets(country = "DE")
     """
-    url = gbif_baseurl + "occurrence/counts/datasets"
+    url = gbif_baseurl() + "occurrence/counts/datasets"
     out = gbif_GET(url, {"taxonKey": taxonKey, "country": country}, **kwargs)
     return out
 
@@ -137,7 +137,7 @@ def count_countries(publishingCountry, **kwargs):
             from pygbif import occurrences
             occurrences.count_countries(publishingCountry = "DE")
     """
-    url = gbif_baseurl + "occurrence/counts/countries"
+    url = gbif_baseurl() + "occurrence/counts/countries"
     out = gbif_GET(url, {"publishingCountry": publishingCountry}, **kwargs)
     return out
 
@@ -155,7 +155,7 @@ def count_publishingcountries(country, **kwargs):
             from pygbif import occurrences
             occurrences.count_publishingcountries(country = "DE")
     """
-    url = gbif_baseurl + "occurrence/counts/publishingCountries"
+    url = gbif_baseurl() + "occurrence/counts/publishingCountries"
     out = gbif_GET(url, {"country": country}, **kwargs)
     return out
 
@@ -171,6 +171,6 @@ def count_schema(**kwargs):
             from pygbif import occurrences
             occurrences.count_schema()
     """
-    url = gbif_baseurl + "occurrence/count/schema"
+    url = gbif_baseurl() + "occurrence/count/schema"
     out = gbif_GET(url, {}, **kwargs)
     return out

@@ -87,14 +87,14 @@ def organizations(
 
         if uuid is None:
             if x == "all":
-                url = gbif_baseurl + "organization"
+                url = gbif_baseurl() + "organization"
             else:
-                url = gbif_baseurl + "organization/" + x
+                url = gbif_baseurl() + "organization/" + x
         else:
             if x == "all":
-                url = gbif_baseurl + "organization/" + uuid
+                url = gbif_baseurl() + "organization/" + uuid
             else:
-                url = gbif_baseurl + "organization/" + uuid + "/" + x
+                url = gbif_baseurl() + "organization/" + uuid + "/" + x
 
         res = gbif_GET(url, args, **kwargs)
         return {"meta": get_meta(res), "data": parse_results(res, uuid)}

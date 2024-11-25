@@ -1,9 +1,7 @@
 # import external libraries
-import os
 import csv
 import json
 import re
-import datetime
 import requests
 import logging
 from warnings import warn
@@ -11,20 +9,17 @@ from warnings import warn
 # import internal libraries
 from .. import package_metadata, occurrences
 from ..gbifutils import (
-    is_not_none,
-    is_none,
-    stop,
     gbif_GET,
     gbif_GET_write,
     gbif_DELETE,
     gbif_baseurl,
-    gbif_GET_raw
+    gbif_GET_raw, _check_environ
 )
-
 
 # how to parse arguments/predicates
 def _parse_args(x):
     x = x.replace("'", '"')
+    # tmp = re.split("\s", x)
     tmp = re.split(r"\s", x)
     key = key_lkup.get(tmp[0])
     # check special predicates
@@ -52,26 +47,6 @@ def _parse_args(x):
         "key": key,
         "value": tmp[2],
     }  # does not work for in, within, geodistance, not, like, isnull and isnotnull predicate values
-
-
-def _check_environ(variable, value):
-    """check if a variable is present in the environmental variables"""
-    if is_not_none(value):
-        return value
-    else:
-        value = os.environ.get(variable)
-        if is_none(value):
-            stop(
-                "".join(
-                    [
-                        variable,
-                        """ not supplied and no entry in environmental
-                           variables""",
-                    ]
-                )
-            )
-        else:
-            return value
 
 
 # download function
@@ -290,8 +265,7 @@ class GbifDownload(object):
         self.predicates = []
         self._main_pred_type = "and"
         self._predicate = {"type": self._main_pred_type, "predicates": self.predicates}
-
-        self.url = "http://api.gbif.org/v1/occurrence/download/request"
+        self.url = gbif_baseurl() + "occurrence/download/request"
         self.header = {
             "accept": "application/json",
             "content-type": "application/json",
@@ -480,13 +454,19 @@ class GbifDownload(object):
             data=json.dumps(self.payload),
             headers=self.header,
         )
-        if r.status_code > 203:
+        if r.status_code == 403:
+            raise Exception(
+                "error status code "
+                + str(r.status_code)
+                + ", check your username and password."
+            )
+        elif r.status_code > 203:
             raise Exception(
                 "error: "
                 + r.text
                 + ", with error status code "
                 + str(r.status_code)
-                + "check your number of active downloads."
+                + ", check your number of active downloads."
             )
         else:
             self.request_id = r.text
@@ -517,7 +497,7 @@ def download_meta(key, **kwargs):
       occ.download_meta(key = "0003970-140910143529206")
       occ.download_meta(key = "0000099-140929101555934")
     """
-    url = "http://api.gbif.org/v1/occurrence/download/" + key
+    url = gbif_baseurl() + "occurrence/download/" + key
     return gbif_GET(url, {}, **kwargs)
 
 
@@ -545,7 +525,7 @@ def download_cancel(key, user=None, pwd=None, **kwargs):
     user = _check_environ("GBIF_USER", user)
     pwd = _check_environ("GBIF_PWD", pwd)
 
-    url = "http://api.gbif.org/v1/occurrence/download/request/" + key
+    url = gbif_baseurl() + "occurrence/download/request/" + key
     return gbif_DELETE(url, {}, auth=(user, pwd), **kwargs)
 
 
@@ -569,7 +549,7 @@ def download_list(user=None, pwd=None, limit=20, offset=0):
     user = _check_environ("GBIF_USER", user)
     pwd = _check_environ("GBIF_PWD", pwd)
 
-    url = "http://api.gbif.org/v1/occurrence/download/user/" + user
+    url = gbif_baseurl() + "occurrence/download/user/" + user
     args = {"limit": limit, "offset": offset}
     res = gbif_GET(url, args, auth=(user, pwd))
     return {
@@ -619,7 +599,7 @@ def download_get(key, path=".", **kwargs):
         raise Exception('download "%s" not of status SUCCEEDED' % key)
     else:
         logging.info("Download file size: %s bytes" % meta["size"])
-        url = "http://api.gbif.org/v1/occurrence/download/request/" + key
+        url = gbif_baseurl() + "occurrence/download/request/" + key
         path = "%s/%s.zip" % (path, key)
         gbif_GET_write(url, path, **kwargs)
         logging.info("On disk at " + path)
@@ -649,7 +629,7 @@ def download_describe(format, **kwargs):
     """
     camel_formats = ["simpleCsv", "simpleParquet", "dwca", "speciesList", "simpleAvro","sql"]
     if format in camel_formats: 
-        url = gbif_baseurl + "occurrence/download/describe/" + str(format)
+        url = gbif_baseurl() + "occurrence/download/describe/" + str(format)
         return gbif_GET(url,{}, **kwargs)
     else:
         raise ValueError("format not in list of acceptable formats")
@@ -682,7 +662,7 @@ def download_sql(sql,
             occ.download_sql("SELECT gbifid,publishingCountry FROM occurrence WHERE publishingCountry=GB'")
 
     """
-    url = "https://api.gbif.org/v1/occurrence/download/request"
+    url = gbif_baseurl() + "/occurrence/download/request"
     user = _check_environ("GBIF_USER", user)
     pwd = _check_environ("GBIF_PWD", pwd)
 
@@ -738,7 +718,7 @@ def download_citation(key):
         occurrences.download_citation("0235283-220831081235567")
 
     """
-    url = gbif_baseurl + "occurrence/download/" + str(key) + "/citation"
+    url = gbif_baseurl() + "occurrence/download/" + str(key) + "/citation"
     if re.fullmatch(r'^\d+-\d+$', key):
         out = gbif_GET_raw(url).decode('utf-8')
         return(out)

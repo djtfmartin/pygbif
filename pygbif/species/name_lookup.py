@@ -172,4 +172,4 @@ def name_lookup(
         )
         args.update(xx)
     kwargs = {key: kwargs[key] for key in kwargs if key in requests_argset}
-    return gbif_GET(gbif_baseurl + "species/search", args, **kwargs)
+    return gbif_GET(gbif_baseurl() + "species/search", args, **kwargs)

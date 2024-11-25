@@ -90,17 +90,17 @@ def nodes(
 
         if uuid is None:
             if x == "all":
-                url = gbif_baseurl + "node"
+                url = gbif_baseurl() + "node"
             else:
                 if isocode is not None and x == "country":
-                    url = gbif_baseurl + "node/country/" + isocode
+                    url = gbif_baseurl() + "node/country/" + isocode
                 else:
-                    url = gbif_baseurl + "node/" + x
+                    url = gbif_baseurl() + "node/" + x
         else:
             if x == "all":
-                url = gbif_baseurl + "node/" + uuid
+                url = gbif_baseurl() + "node/" + uuid
             else:
-                url = gbif_baseurl + "node/" + uuid + "/" + x
+                url = gbif_baseurl() + "node/" + uuid + "/" + x
 
         res = gbif_GET(url, args, **kwargs)
         return {"meta": get_meta(res), "data": parse_results(res, uuid)}

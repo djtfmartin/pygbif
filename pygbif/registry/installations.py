@@ -83,14 +83,14 @@ def installations(
 
         if uuid is None:
             if x == "all":
-                url = gbif_baseurl + "installation"
+                url = gbif_baseurl() + "installation"
             else:
-                url = gbif_baseurl + "installation/" + x
+                url = gbif_baseurl() + "installation/" + x
         else:
             if x == "all":
-                url = gbif_baseurl + "installation/" + uuid
+                url = gbif_baseurl() + "installation/" + uuid
             else:
-                url = gbif_baseurl + "installation/" + uuid + "/" + x
+                url = gbif_baseurl() + "installation/" + uuid + "/" + x
 
         res = gbif_GET(url, args, **kwargs)
         return {"meta": get_meta(res), "data": parse_results(res, uuid)}

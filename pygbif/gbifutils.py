@@ -1,3 +1,5 @@
+import os
+
 import requests
 import re
 import pygbif
@@ -102,7 +104,14 @@ def is_not_none(x):
     return x.__class__.__name__ != "NoneType"
 
 
-gbif_baseurl = "https://api.gbif.org/v1/"
+def gbif_baseurl():
+    url = os.environ.get("GBIF_API")
+    if url is None:
+        url = "http://api.gbif.org/v1/"
+    if url[-1] != "/":
+        url = url + "/"
+    return url
+
 
 requests_argset = [
     "timeout",
@@ -193,3 +202,23 @@ def bool2str(x):
         return z
     else:
         return x
+
+
+def _check_environ(variable, value):
+    """check if a variable is present in the environmental variables"""
+    if is_not_none(value):
+        return value
+    else:
+        value = os.environ.get(variable)
+        if is_none(value):
+            stop(
+                "".join(
+                    [
+                        variable,
+                        """ not supplied and no entry in environmental
+                           variables""",
+                    ]
+                )
+            )
+        else:
+            return value

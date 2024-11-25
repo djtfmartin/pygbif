@@ -74,7 +74,7 @@ def name_backbone(
       # Multiple equal matches
       species.name_backbone(name='Oenante')
   """
-    url = gbif_baseurl + "species/match"
+    url = gbif_baseurl() + "species/match"
     args = {
         "name": name,
         "rank": rank,

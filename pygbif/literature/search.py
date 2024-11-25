@@ -94,7 +94,7 @@ def search(
         # search for count only 
         literature.search(year="2010,2024", limit=0)["count"]    
     """
-    url = gbif_baseurl + "literature/search"
+    url = gbif_baseurl() + "literature/search"
     args = {
         "citationType": citationType,
         "countriesOfCoverage": countriesOfCoverage,

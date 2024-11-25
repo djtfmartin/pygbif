@@ -70,12 +70,12 @@ def networks(
             stop('You must specify a uuid if data does not equal "all"')
 
         if uuid is None:
-            url = gbif_baseurl + "network"
+            url = gbif_baseurl() + "network"
         else:
             if x == "all":
-                url = gbif_baseurl + "network/" + uuid
+                url = gbif_baseurl() + "network/" + uuid
             else:
-                url = gbif_baseurl + "network/" + uuid + "/" + x
+                url = gbif_baseurl() + "network/" + uuid + "/" + x
 
         res = gbif_GET(url, args, **kwargs)
         return {"meta": get_meta(res), "data": parse_results(res, uuid)}

@@ -27,7 +27,7 @@ def dataset_metrics(uuid):
     """
 
     def getdata(x):
-        url = gbif_baseurl + "dataset/" + x + "/metrics"
+        url = gbif_baseurl() + "dataset/" + x + "/metrics"
         return gbif_GET(url, {})
 
     if len2(uuid) == 1:
@@ -106,17 +106,17 @@ def datasets_fetch(x, uuid, args, **kwargs):
 
     if uuid is None:
         if x == "all":
-            url = gbif_baseurl + "dataset"
+            url = gbif_baseurl() + "dataset"
         else:
             if id is not None and x == "metadata":
-                url = gbif_baseurl + "dataset/metadata/" + id + "/document"
+                url = gbif_baseurl() + "dataset/metadata/" + id + "/document"
             else:
-                url = gbif_baseurl + "dataset/" + x
+                url = gbif_baseurl() + "dataset/" + x
     else:
         if x == "all":
-            url = gbif_baseurl + "dataset/" + uuid
+            url = gbif_baseurl()+ "dataset/" + uuid
         else:
-            url = gbif_baseurl + "dataset/" + uuid + "/" + x
+            url = gbif_baseurl() + "dataset/" + uuid + "/" + x
 
     res = gbif_GET(url, args, **kwargs)
     return res
@@ -180,7 +180,7 @@ def dataset_suggest(
             # Search by decade
             registry.dataset_suggest(decade=1980, limit = 30)
     """
-    url = gbif_baseurl + "dataset/suggest"
+    url = gbif_baseurl() + "dataset/suggest"
     args = {
         "q": q,
         "type": type,
@@ -308,7 +308,7 @@ def dataset_search(
             x = registry.dataset_search(q="plant", hl=True, limit = 10)
             [ z['description'] for z in x['results'] ]
     """
-    url = gbif_baseurl + "dataset/search"
+    url = gbif_baseurl() + "dataset/search"
     args = {
         "q": q,
         "type": type,

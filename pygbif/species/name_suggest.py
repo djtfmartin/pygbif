@@ -35,7 +35,7 @@ def name_suggest(q=None, datasetKey=None, rank=None, limit=100, offset=None, **k
       species.name_suggest(q='Puma', rank="infraspecific_name")
       species.name_suggest(q='Puma', limit=2)
   """
-    url = gbif_baseurl + "species/suggest"
+    url = gbif_baseurl() + "species/suggest"
     args = {"q": q, "rank": rank, "offset": offset, "limit": limit}
     return gbif_GET(url, args, **kwargs)
 
