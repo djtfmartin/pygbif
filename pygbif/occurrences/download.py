@@ -837,4 +837,5 @@ key_lkup = {
     "waterBody": "WATER_BODY",
 }
 
-formats = ["SIMPLE_CSV", "SIMPLE_PARQUET", "DWCA", "SPECIES_LIST", "SIMPLE_AVRO"]
+formats = ["SIMPLE_CSV", "SIMPLE_PARQUET", "DWCA", "SPECIES_LIST", "SIMPLE_AVRO", "BIONOMIA",
+           "SIMPLE_WITH_VERBATIM_AVRO", "MAP_OF_LIFE"]
